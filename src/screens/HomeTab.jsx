@@ -5,6 +5,26 @@ import { dotFor } from "../lib/utils";
 import { endTime, greeting, isNight, isSunset, iso } from "../lib/dates";
 import { SCENE_IMG, BOARD_IMG, SUNSET_IMG, NIGHT_IMG } from "../assets/images";
 
+function ProgressRing({ percent, color, size = 46 }) {
+  const stroke = 4;
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  const clamped = Math.max(0, Math.min(100, percent));
+  return (
+    <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
+      <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#ede6d6" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth={stroke}
+          strokeDasharray={c} strokeDashoffset={c - (clamped / 100) * c} strokeLinecap="round" />
+      </svg>
+      <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
+        fontSize: 10.5, fontWeight: 500, color: C.ink }}>
+        {Math.round(clamped)}%
+      </div>
+    </div>
+  );
+}
+
 export function HomeTab({
   settings, students, lessons, todaysLessons, unpaidByStudent,
   setShowMenu, setShowAdd, setTab, setSelectedLessonId, sendLessonWA, requestToggle, setShowUnpaid,
@@ -103,6 +123,19 @@ export function HomeTab({
         const allDoneToday = todayAll.length > 0 && todayDone.length === todayAll.length;
         const noLessonsToday = todayAll.length === 0;
 
+        const todayUnpaid = lessons.filter(l => l.date === todayStr && l.status === "unpaid" && new Date(l.date + "T" + l.time) <= now);
+        const todayUnpaidSum = todayUnpaid.reduce((s, l) => s + l.price, 0);
+
+        const doneRevenue = todayDone.reduce((s, l) => s + l.price, 0);
+        const pctLessons = todayAll.length ? (todayDone.length / todayAll.length) * 100 : 0;
+        const pctRevenue = todayRevenue > 0 ? (doneRevenue / todayRevenue) * 100 : 0;
+        const pctHours = todayTotalHours > 0 ? (todayHours / todayTotalHours) * 100 : 0;
+        const kpiCards = [
+          { title: "שיעורים היום", value: String(todayDone.length), goal: `מתוך ${todayAll.length}`, pct: pctLessons, color: "#35493e" },
+          { title: "הכנסה היום", value: `₪${doneRevenue.toLocaleString()}`, goal: `מתוך ₪${todayRevenue.toLocaleString()}`, pct: pctRevenue, color: "#c9a95c" },
+          { title: "שעות היום", value: String(todayHours), goal: `מתוך ${todayTotalHours}`, pct: pctHours, color: "#c39089" },
+        ];
+
         return (
           <div style={{ margin: "16px 20px 8px" }}>
             {/* EOD message — above cards */}
@@ -112,52 +145,27 @@ export function HomeTab({
                 {noLessonsToday ? "😊 איזה כיף! אין שיעורים להיום" : "כל השיעורים להיום הושלמו! זמן לנוח"}
               </div>
             )}
+
             {/* KPI cards */}
             <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-            <div style={{ display: "flex", gap: 7 }}>
-              {/* Card 1: שיעורים היום */}
-              <div style={{ flex: 1, background: C.card, border: "1.5px solid #8a8c4f", borderRadius: 18,
-                boxShadow: "0 2px 8px rgba(80,65,40,.07)", overflow: "hidden" }}>
-                <div style={{ padding: "16px 10px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, minHeight: 88, textAlign: "center" }}>
-                    <div style={{ fontSize: 26, fontWeight: 700, fontFamily: "'Hina Mincho',serif",
-                      color: C.ink, lineHeight: 1 }}>
-                      {todayDone.length}<span style={{ fontSize: 14, fontWeight: 400, color: C.sub }}>/{todayAll.length}</span>
+              <div style={{ display: "flex", gap: 7 }}>
+                {kpiCards.map(({ title, value, goal, pct, color }) => (
+                  <div key={title} style={{ flex: 1, background: C.card, border: "1px solid #e8e0cc", borderRadius: 18,
+                    boxShadow: "0 2px 8px rgba(80,65,40,.07)", overflow: "hidden" }}>
+                    <div style={{ padding: "12px 10px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, minHeight: 88 }}>
+                      <div style={{ textAlign: "right", minWidth: 0 }}>
+                        <div style={{ fontSize: 11.5, fontWeight: 400, color: C.sub, lineHeight: 1.3, marginBottom: 4 }}>{title}</div>
+                        <div style={{ fontSize: 21, fontWeight: 700, fontFamily: "'Hina Mincho',serif", color: C.ink, lineHeight: 1 }}>{value}</div>
+                        <div style={{ fontSize: 10, fontWeight: 300, color: C.sub, marginTop: 3 }}>{goal}</div>
+                      </div>
+                      <ProgressRing percent={pct} color={color} size={44} />
                     </div>
-                    <div style={{ fontSize: 13, fontWeight: 400, color: C.sub, lineHeight: 1.3 }}>שיעורים היום</div>
-                </div>
+                  </div>
+                ))}
               </div>
 
-              {/* Card 2: הכנסה היום */}
-              <div style={{ flex: 1, background: C.card, border: "1.5px solid #8a8c4f", borderRadius: 18,
-                boxShadow: "0 2px 8px rgba(80,65,40,.07)", overflow: "hidden" }}>
-                <div style={{ padding: "16px 10px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, minHeight: 88, textAlign: "center" }}>
-                    <div style={{ fontSize: 26, fontWeight: 700, fontFamily: "'Hina Mincho',serif",
-                      color: C.ink, lineHeight: 1 }}>
-                      ₪{todayRevenue.toLocaleString()}
-                    </div>
-                    <div style={{ fontSize: 13, fontWeight: 400, color: C.sub, lineHeight: 1.3 }}>הכנסה היום</div>
-                </div>
-              </div>
-
-              {/* Card 3: שעות שנותרו היום */}
-              <div style={{ flex: 1, background: C.card, border: "1.5px solid #8a8c4f", borderRadius: 18,
-                boxShadow: "0 2px 8px rgba(80,65,40,.07)", overflow: "hidden" }}>
-                <div style={{ padding: "16px 10px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, minHeight: 88, textAlign: "center" }}>
-                    <div style={{ fontSize: 26, fontWeight: 700, fontFamily: "'Hina Mincho',serif",
-                      color: C.ink, lineHeight: 1 }}>
-                      {todayRemainingHours}<span style={{ fontSize: 14, fontWeight: 400, color: C.sub }}>/{todayTotalHours}</span>
-                    </div>
-                    <div style={{ fontSize: 13, fontWeight: 400, color: C.sub, lineHeight: 1.3 }}>שעות היום</div>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Pending card — full width, separate row */}
-            {unpaidCount > 0 && (() => {
-              const todayUnpaid = lessons.filter(l => l.date === todayStr && l.status === "unpaid" && new Date(l.date + "T" + l.time) <= now);
-              const todayUnpaidSum = todayUnpaid.reduce((s,l) => s+l.price, 0);
-              return (
+              {/* Pending card — full width, separate row */}
+              {unpaidCount > 0 && (
                 <div onClick={() => setShowUnpaid(true)}
                   style={{ marginTop: 8, background: C.card, border: "1px solid #e8e0cc",
                     borderRadius: 18, boxShadow: "0 2px 8px rgba(80,65,40,.07)",
@@ -168,7 +176,7 @@ export function HomeTab({
                     <span style={{ fontSize: 12, fontWeight: 300, color: C.sub,
                       background: "#f4f0e6", borderRadius: 99, padding: "2px 10px" }}>↗ לחץ לפירוט</span>
                   </div>
-                                          {/* Today row */}
+                  {/* Today row */}
                   {todayUnpaid.length > 0 && (
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
                       padding: "8px 0", borderBottom: "1px solid #ede6d6" }}>
@@ -192,15 +200,14 @@ export function HomeTab({
                     </div>
                   </div>
                 </div>
-              );
-            })()}
-            </div>{/* close flex-column */}
+              )}
+            </div>
           </div>
         );
       })()}
 
       <div style={{
-        margin: "16px 0 8px", position: "relative", overflow: "hidden",
+        margin: "16px 20px 8px", borderRadius: 18, position: "relative", overflow: "hidden",
         boxShadow: "0 4px 12px rgba(52,64,50,.14)",
       }}>
         <img src={BOARD_IMG} alt="" style={{ width: "100%", height: "auto", display: "block", pointerEvents: "none" }} />

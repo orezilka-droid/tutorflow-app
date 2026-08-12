@@ -108,7 +108,7 @@ export function LessonsScreen({ lessons, students, anchor, setAnchor, view, setV
         const upcoming = lessons.filter(l => l.date >= todayISO).length;
         return (
           <div style={{ display: "flex", alignItems: "flex-end", gap: 10, margin: "0 20px 0" }}>
-            <div style={{ textAlign: "right", flex: 1, paddingBottom: 8, marginTop: -44 }}>
+            <div style={{ textAlign: "right", flex: 1, paddingBottom: 8, marginTop: -68 }}>
               <div style={{ fontSize: 30, fontWeight: 400, lineHeight: 1.15, marginTop: 6 }}>שיעורים מתוכננים</div>
               <div style={{ fontSize: 14, fontWeight: 300, color: C.sub, marginTop: 4 }}>{upcoming} שיעורים קרובים</div>
             </div>
@@ -173,12 +173,21 @@ export function LessonsScreen({ lessons, students, anchor, setAnchor, view, setV
                     <span style={{ fontSize: 12, fontWeight: 300, color: "#b8ae94", paddingTop: 6 }}>פנוי</span>
                   ) : ls.map((l) => (
                     <button key={l.id} onClick={() => onOpenLesson(l.id)}
-                      style={{ display: "flex", alignItems: "center", gap: 7, background: C.cream, border: `1px solid ${C.hair}`, borderRadius: 9, padding: "4px 9px", cursor: "pointer", fontFamily: "inherit", fontSize: 12.5, color: C.ink }}>
-                      <span style={{ width: 7, height: 7, borderRadius: "50%", background: dotFor(l.subject), flexShrink: 0 }} />
-                      {l.time} · {l.studentName}
-                      <span style={{ marginRight: "auto", fontSize: 11, fontWeight: 300, color: l.status === "paid" ? C.paidTx : C.unpaidTx }}>
+                      style={{ display: "flex", alignItems: "stretch", borderRadius: 10, overflow: "hidden", border: "none",
+                        cursor: "pointer", fontFamily: "inherit", padding: 0, boxShadow: "0 1px 4px rgba(52,64,50,.08)" }}>
+                      <div style={{ background: dotFor(l.subject), color: "#fff", padding: "6px 10px", display: "flex",
+                        flexDirection: "column", alignItems: "center", justifyContent: "center", minWidth: 50, flexShrink: 0 }}>
+                        <span style={{ fontSize: 11, fontWeight: 500, lineHeight: 1.3 }}>{l.time}</span>
+                        <span style={{ fontSize: 10, fontWeight: 300, opacity: .85, lineHeight: 1.3 }}>{endTime(l.time, l.duration)}</span>
+                      </div>
+                      <div style={{ flex: 1, background: C.card, padding: "6px 12px", textAlign: "right", minWidth: 0 }}>
+                        <div style={{ fontSize: 12.5, fontWeight: 500, color: C.ink, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{l.subject}</div>
+                        <div style={{ fontSize: 11, fontWeight: 300, color: C.sub, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{l.studentName}</div>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", padding: "0 10px", background: C.card,
+                        fontSize: 10.5, fontWeight: 300, color: l.status === "paid" ? C.paidTx : C.unpaidTx, flexShrink: 0 }}>
                         {l.status === "paid" ? "שולם" : "טרם"}
-                      </span>
+                      </div>
                     </button>
                   ))}
                 </div>
