@@ -22,7 +22,7 @@ export function AddLesson({ students, defaultDate, onClose, onSubmit }) {
       <label className="tf-label">תלמיד/ה</label>
       <select className="tf-input" value={form.studentId} onChange={(e) => pickStudent(e.target.value)}>
         <option value="">בחירת תלמיד/ה…</option>
-        {students.map((s) => <option key={s.id} value={s.id}>{s.name} · {s.subject} (₪{s.hourlyRate} לשעה)</option>)}
+        {students.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
       </select>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 12 }}>
         <div>
@@ -77,7 +77,7 @@ export function AddLesson({ students, defaultDate, onClose, onSubmit }) {
       </label>
       <button disabled={!valid} onClick={() => onSubmit(form, sendConfirm)}
         style={{ width: "100%", background: valid ? "#35493e" : "#d9d2bf", color: "#efe9d8", border: "none", borderRadius: 12, padding: 12, fontSize: 15, fontWeight: 400, fontFamily: "inherit", cursor: valid ? "pointer" : "default" }}>
-        הוספת שיעור ליומן
+        שמירה
       </button>
     </Sheet>
   );

@@ -89,7 +89,7 @@ export function PaymentsTab({ lessons, students, unpaidByStudent, templates, onO
                 <img src={img} alt="" style={{ width: 69, height: 69, flexShrink: 0, objectFit: "contain" }} />
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 11, fontWeight: 400, color: amber ? "#c04040" : C.sub, lineHeight: 1.2 }}>{label}{amber ? " ↗" : ""}</div>
-                  <div style={{ fontSize: 24, fontWeight: 700, fontFamily: "'Hina Mincho', serif", color: amber ? "#c04040" : C.ink, lineHeight: 1.1, marginTop: 2 }}>{value}</div>
+                  <div style={{ fontSize: 24, fontWeight: 700, fontFamily: "'Google Sans Flex',sans-serif", color: amber ? "#c04040" : C.ink, lineHeight: 1.1, marginTop: 2 }}>{value}</div>
                 </div>
               </div>
             ))}

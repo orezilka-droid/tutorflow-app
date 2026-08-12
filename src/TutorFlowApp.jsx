@@ -346,7 +346,8 @@ export function TutorFlowApp({ user, onLogout }) {
   return (
     <div dir="rtl" style={{ minHeight: "100vh", background: "#efeadd", display: "flex", justifyContent: "center", fontFamily: "'Assistant',sans-serif" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600&family=Lora:ital@1&family=Hina+Mincho&family=Fredoka:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600&family=Lora:ital@1&family=Fredoka:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap');
         .tf-card{background:${C.card};border:1px solid ${C.hair};border-radius:18px;box-shadow:0 2px 8px rgba(52,64,50,.04);}
         .tf-badge{font-size:12px;font-weight:400;padding:3px 13px;border-radius:99px;white-space:nowrap;border:none;cursor:pointer;font-family:inherit;}
         .tf-hair{border-bottom:1px solid ${C.hair};}
