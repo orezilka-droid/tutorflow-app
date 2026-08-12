@@ -459,8 +459,11 @@ export function TutorFlowApp({ user, onLogout }) {
             const on = tab === n.id;
             return (
               <button key={n.id} onClick={() => { setTab(n.id); setSelectedLessonId(null); }}
-                style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 4, fontSize: 11.5, fontFamily: "inherit", fontWeight: on ? 500 : 300, color: on ? "#6f7f75" : C.sub }}>
-                <n.icon size={22} strokeWidth={STROKE} fill={on && n.id === "home" ? "#6f7f75" : "none"} />
+                style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 4, fontSize: 11.5, fontFamily: "inherit", fontWeight: on ? 600 : 300, color: on ? C.green : C.sub }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 38, height: 30,
+                  borderRadius: 12, background: on ? "#e3ead4" : "transparent" }}>
+                  <n.icon size={22} strokeWidth={on ? 2 : STROKE} fill={on && n.id === "home" ? C.green : "none"} color={on ? C.green : C.sub} />
+                </div>
                 {n.label}
               </button>
             );
