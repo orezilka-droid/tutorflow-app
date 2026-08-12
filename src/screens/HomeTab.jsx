@@ -50,7 +50,7 @@ export function HomeTab({
             {todaysLessons.length} שיעורים היום · ₪{todaysLessons.reduce((s, l) => s + l.price, 0)} צפויים
           </div>
         </div>
-        <div style={{ margin: "22px 14px 0", borderRadius: "18px 18px 18px 18px", overflow: "hidden" }}>
+        <div style={{ margin: (isNight || isSunset) ? "0 14px 0" : "22px 14px 0", borderRadius: "18px 18px 18px 18px", overflow: "hidden" }}>
           {isNight
             ? <img src={NIGHT_IMG} alt="" style={{ width: "100%", height: "auto", display: "block", pointerEvents: "none" }} />
             : isSunset
