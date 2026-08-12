@@ -8,7 +8,7 @@ import { DIARY } from "../assets/images";
 const navBtn = { background: "none", border: `1px solid ${C.hair}`, borderRadius: 10, width: 32, height: 32,
   display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: C.ink };
 
-const DATE_COLORS = ["#BD8573", "#DEA04D", "#4F7165", "#526A7A", "#8A7680", "#829171"];
+const DATE_COLORS = ["#829171", "#DEA04D", "#BD8573", "#526A7A", "#8A7680"];
 
 function LessonRow({ lesson, student, onOpen, onWA, onEdit, onSummary, onToggle, allLessons }) {
   const paid = lesson.status === "paid";
