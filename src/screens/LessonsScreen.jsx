@@ -125,11 +125,11 @@ export function LessonsScreen({ lessons, students, anchor, setAnchor, view, setV
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "0 20px 12px" }}>
         {/* RTL: right arrow = back, left arrow = forward */}
-        <button onClick={() => shift(1)} style={navBtn} title="קדימה">
+        <button onClick={() => shift(-1)} style={navBtn} title="אחורה">
           <ChevronRight size={18} strokeWidth={STROKE} style={{ transform: "scaleX(-1)" }} />
         </button>
         <div style={{ fontSize: 15, fontWeight: 400 }}>{label}</div>
-        <button onClick={() => shift(-1)} style={navBtn} title="אחורה">
+        <button onClick={() => shift(1)} style={navBtn} title="קדימה">
           <ChevronRight size={18} strokeWidth={STROKE} />
         </button>
       </div>
