@@ -112,7 +112,7 @@ export function LessonsScreen({ lessons, students, anchor, setAnchor, view, setV
               <div style={{ fontSize: 30, fontWeight: 400, lineHeight: 1.15, marginTop: 6 }}>שיעורים מתוכננים</div>
               <div style={{ fontSize: 14, fontWeight: 300, color: C.sub, marginTop: 4 }}>{upcoming} שיעורים קרובים</div>
             </div>
-            <img src={DIARY} alt="" style={{ width: 230, pointerEvents: "none", flexShrink: 0 }} />
+            <img src={DIARY} alt="" style={{ width: 230, marginTop: 30, pointerEvents: "none", flexShrink: 0 }} />
           </div>
         );
       })()}

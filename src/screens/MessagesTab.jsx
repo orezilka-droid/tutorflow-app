@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 import { C, STROKE } from "../lib/theme";
 import { SectionCard } from "../components/Small";
 import { GLOBE2 } from "../assets/images";
+import { iso } from "../lib/dates";
 
 /* ================= Messages tab =================
    templates:        { [key]: body }
@@ -82,7 +83,7 @@ export function MessagesTab({ templates, customTemplates, onChangeTemplate, onAd
           <div style={{ marginTop: 10, background: "#f7f3ea", borderRadius: 10, padding: "9px 12px",
             fontSize: 13, fontWeight: 300, color: "#4a463a", lineHeight: 1.6 }}>
             <span style={{ fontSize: 11, color: C.sub, display: "block", marginBottom: 3 }}>תצוגה מקדימה:</span>
-            {fillTemplate(templates[key], { studentName: "נועה לוי", date: new Date().toISOString().slice(0,10), time: "16:00", price: 270 })}
+            {fillTemplate(templates[key], { studentName: "נועה לוי", date: iso(new Date()), time: "16:00", price: 270 })}
           </div>
         </SectionCard>
       ))}

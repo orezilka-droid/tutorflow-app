@@ -2,7 +2,7 @@ import { Menu, CalendarPlus, MessageCircle } from "lucide-react";
 import { C } from "../lib/theme";
 import { Ic, Badge, SectionCard } from "../components/Small";
 import { dotFor } from "../lib/utils";
-import { endTime, greeting, isNight, isSunset } from "../lib/dates";
+import { endTime, greeting, isNight, isSunset, iso } from "../lib/dates";
 import { SCENE_IMG, BOARD_IMG, SUNSET_IMG, NIGHT_IMG } from "../assets/images";
 
 export function HomeTab({
@@ -28,11 +28,11 @@ export function HomeTab({
 
       <div style={{ position: "relative", padding: "10px 0 0" }}>
         {/* greeting v2 */}
-        <div style={{ position: "absolute", top: 48, right: 0, left: "45%", zIndex: 2, paddingRight: 34 }}>
-          <div style={{ fontSize: 20, fontWeight: 300, lineHeight: 1.1,
+        <div style={{ position: "absolute", top: 26, right: 0, left: "45%", zIndex: 2, paddingRight: 34 }}>
+          <div style={{ fontSize: 20, fontWeight: 300, lineHeight: 1,
             color: (isNight || isSunset) ? "rgba(245,238,220,0.92)" : "rgba(44,52,44,0.85)",
             textShadow: (isNight || isSunset) ? "0 1px 6px rgba(0,0,0,.5)" : "0 1px 4px rgba(255,255,255,.7)" }}>{greeting}</div>
-          <div style={{ fontSize: 36, fontWeight: 300, letterSpacing: ".4px", lineHeight: 1.08,
+          <div style={{ fontSize: 36, fontWeight: 300, letterSpacing: ".4px", lineHeight: 1, marginTop: 2,
             color: (isNight || isSunset) ? "#f0e9d4" : "rgba(44,52,44,0.88)",
             textShadow: (isNight || isSunset) ? "0 2px 8px rgba(0,0,0,.5)" : "0 1px 6px rgba(255,255,255,.8)" }}>{settings.teacherName}</div>
           <div style={{ fontSize: 12.5, fontWeight: 300, marginTop: 3,
@@ -41,7 +41,7 @@ export function HomeTab({
             {todaysLessons.length} שיעורים היום · ₪{todaysLessons.reduce((s, l) => s + l.price, 0)} צפויים
           </div>
         </div>
-        <div style={{ margin: "2px 14px 0", borderRadius: "18px 18px 18px 18px", overflow: "hidden" }}>
+        <div style={{ margin: "22px 14px 0", borderRadius: "18px 18px 18px 18px", overflow: "hidden" }}>
           {isNight
             ? <img src={NIGHT_IMG} alt="" style={{ width: "100%", height: "auto", display: "block", pointerEvents: "none" }} />
             : isSunset
@@ -88,7 +88,7 @@ export function HomeTab({
       {/* New day-focused KPI cards */}
       {(() => {
         const now = new Date();
-        const todayStr = now.toISOString().slice(0, 10);
+        const todayStr = iso(now);
         const todayAll = lessons.filter(l => l.date === todayStr);
         const todayDone = todayAll.filter(l => new Date(l.date + "T" + l.time) <= now);
         const todayHours = +(todayDone.reduce((s, l) => s + l.duration / 60, 0)).toFixed(1);
@@ -200,14 +200,14 @@ export function HomeTab({
       })()}
 
       <div style={{
-        margin: "16px 20px 8px", borderRadius: 18, position: "relative", overflow: "hidden",
-        backgroundImage: `url(${BOARD_IMG})`, backgroundSize: "cover", backgroundPosition: "center",
-        minHeight: 205, boxShadow: "0 4px 12px rgba(52,64,50,.14)",
+        margin: "16px 0 8px", position: "relative", overflow: "hidden",
+        boxShadow: "0 4px 12px rgba(52,64,50,.14)",
       }}>
+        <img src={BOARD_IMG} alt="" style={{ width: "100%", height: "auto", display: "block", pointerEvents: "none" }} />
         <div style={{
-          position: "absolute", right: 24, top: 48, width: "50%",
+          position: "absolute", right: 24, top: "18%", width: "50%",
           fontSize: 17.5, fontFamily: "'Fredoka', sans-serif",
-          fontWeight: 500, lineHeight: 1.6, letterSpacing: ".2px",
+          fontWeight: 400, lineHeight: 1.6, letterSpacing: ".2px",
           color: "rgba(255,252,240,0.92)", textAlign: "right",
         }}>
           {"״"}מורה טוב הופך את הלמידה לפשוטה.
