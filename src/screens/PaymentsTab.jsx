@@ -86,10 +86,12 @@ export function PaymentsTab({ lessons, students, unpaidByStudent, templates, onO
                   borderBottom: i === 0 ? `1px solid #e8e0cc` : "none",
                   background: "transparent",
                   display: "flex", alignItems: "center", gap: 8, minHeight: 88 }}>
-                <img src={img} alt="" style={{ width: 69, height: 69, flexShrink: 0, objectFit: "contain" }} />
-                <div style={{ flex: 1 }}>
+                <img src={img} alt="" style={{ width: 48, height: 48, flexShrink: 0, objectFit: "contain" }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 11, fontWeight: 400, color: amber ? "#c04040" : C.sub, lineHeight: 1.2 }}>{label}{amber ? " ↗" : ""}</div>
-                  <div style={{ fontSize: 24, fontWeight: 700, fontFamily: "'Google Sans Flex',sans-serif", color: amber ? "#c04040" : C.ink, lineHeight: 1.1, marginTop: 2 }}>{value}</div>
+                  <div style={{ fontSize: value.length > 9 ? 16 : value.length > 6 ? 19 : 24, fontWeight: 700,
+                    fontFamily: "'Google Sans Flex',sans-serif", color: amber ? "#c04040" : C.ink, lineHeight: 1.1, marginTop: 2,
+                    whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{value}</div>
                 </div>
               </div>
             ))}

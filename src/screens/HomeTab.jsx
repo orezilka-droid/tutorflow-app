@@ -1,4 +1,4 @@
-import { Menu, CalendarPlus, MessageCircle } from "lucide-react";
+import { Menu, CalendarPlus } from "lucide-react";
 import { C } from "../lib/theme";
 import { Ic, Badge, SectionCard } from "../components/Small";
 import { dotFor } from "../lib/utils";
@@ -84,11 +84,6 @@ export function HomeTab({
               <div style={{ fontSize: 14.5, fontWeight: 500, lineHeight: 1.3 }}>{students.find((s) => s.id === l.studentId)?.subject}</div>
               <div style={{ fontSize: 12, fontWeight: 300, color: C.sub, lineHeight: 1.3 }}>{l.studentName}</div>
             </div>
-            <button onClick={(e) => { e.stopPropagation(); sendLessonWA(l); }}
-              title="שליחת הודעת וואטסאפ"
-              style={{ background: "none", border: "none", color: C.sub, cursor: "pointer", padding: 4 }}>
-              <Ic icon={MessageCircle} size={19} />
-            </button>
             <Badge status={l.status} onClick={(e) => { e.stopPropagation(); requestToggle(l.id); }} />
           </div>
         ))}
@@ -121,8 +116,8 @@ export function HomeTab({
         const pctHours = todayTotalHours > 0 ? (todayHours / todayTotalHours) * 100 : 0;
         const kpiCards = [
           { title: "שיעורים היום", value: String(todayDone.length), goal: `מתוך ${todayAll.length}`, pct: pctLessons, color: "#35493e", showBar: true },
-          { title: "הכנסה היום", value: `₪${doneRevenue.toLocaleString()}`, goal: `מתוך ₪${todayRevenue.toLocaleString()}`, pct: pctRevenue, color: "#c9a95c", showBar: false },
           { title: "שעות היום", value: String(todayHours), goal: `מתוך ${todayTotalHours}`, pct: pctHours, color: "#c39089", showBar: true },
+          { title: "הכנסה היום", value: `₪${doneRevenue.toLocaleString()}`, goal: `מתוך ₪${todayRevenue.toLocaleString()}`, pct: pctRevenue, color: "#c9a95c", showBar: false },
         ];
 
         return (
@@ -139,10 +134,10 @@ export function HomeTab({
             <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
               <div style={{ display: "flex", gap: 7 }}>
                 {kpiCards.map(({ title, value, goal, pct, color, showBar }) => (
-                  <div key={title} style={{ flex: 1, background: C.card, border: "1px solid #e8e0cc", borderRadius: 18,
+                  <div key={title} style={{ flex: 1, background: `${color}1c`, border: `1px solid ${color}33`, borderRadius: 18,
                     boxShadow: "0 2px 8px rgba(80,65,40,.07)", overflow: "hidden" }}>
-                    <div style={{ padding: "12px 10px", display: "flex", flexDirection: "column", gap: 6, minHeight: 88 }}>
-                      <div style={{ textAlign: "right", minWidth: 0, flex: 1 }}>
+                    <div style={{ padding: "12px 10px", display: "flex", flexDirection: "column", alignItems: "center", gap: 6, minHeight: 88 }}>
+                      <div style={{ textAlign: "center", minWidth: 0, flex: 1 }}>
                         <div style={{ fontSize: 11.5, fontWeight: 400, color: C.sub, lineHeight: 1.3, marginBottom: 4 }}>{title}</div>
                         <div style={{ fontSize: 21, fontWeight: 700, fontFamily: "'Google Sans Flex',sans-serif", color: C.ink, lineHeight: 1 }}>{value}</div>
                         <div style={{ fontSize: 10, fontWeight: 300, color: C.sub, marginTop: 3 }}>{goal}</div>

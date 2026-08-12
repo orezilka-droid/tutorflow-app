@@ -162,18 +162,17 @@ export function LessonsScreen({ lessons, students, anchor, setAnchor, view, setV
             const isToday = d === todayISO;
             return (
               <div key={d} className={i < 6 ? "tf-hair" : ""}
-                style={{ display: "flex", gap: 12, padding: "9px 14px", alignItems: "flex-start", background: isToday ? "#f6f1e2" : "transparent" }}>
+                style={{ display: "flex", alignItems: "stretch" }}>
                 <button onClick={() => { setAnchor(d); setView("day"); }}
-                  style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", width: 42, textAlign: "center", color: C.ink, padding: 0 }}>
-                  <div style={{ fontSize: 12, fontWeight: 300, color: C.sub, marginBottom: 4 }}>{HE_DAYS[i]}</div>
-                  <div style={{ width: 32, height: 32, margin: "0 auto", borderRadius: 9, display: "flex",
-                    alignItems: "center", justifyContent: "center",
+                  style={{ border: "none", cursor: "pointer", fontFamily: "inherit", width: 58, flexShrink: 0,
+                    display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 3,
+                    padding: "10px 4px",
                     background: isToday ? C.green : (ls.length > 0 ? dotFor(ls[0].subject) : "#f0ead8"),
                     color: (isToday || ls.length > 0) ? "#fff" : C.ink }}>
-                    <span style={{ fontSize: 15, fontWeight: isToday ? 600 : 400 }}>{Number(d.slice(8, 10))}</span>
-                  </div>
-                </button>
-                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4, paddingTop: 2 }}>
+                    <span style={{ fontSize: 11.5, fontWeight: 400, opacity: .9 }}>{HE_DAYS[i]}</span>
+                    <span style={{ fontSize: 17, fontWeight: isToday ? 600 : 500 }}>{Number(d.slice(8, 10))}</span>
+                  </button>
+                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4, padding: "9px 14px" }}>
                   {ls.length === 0 ? (
                     <span style={{ fontSize: 12, fontWeight: 300, color: "#b8ae94", paddingTop: 6 }}>פנוי</span>
                   ) : ls.map((l) => (
