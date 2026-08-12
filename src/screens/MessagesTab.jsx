@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Filter } from "lucide-react";
 import { C, STROKE } from "../lib/theme";
 import { SectionCard } from "../components/Small";
 import { GLOBE2 } from "../assets/images";
@@ -28,6 +28,7 @@ export function MessagesTab({ templates, customTemplates, onChangeTemplate, onAd
   const [newTplName, setNewTplName] = useState("");
   const [showNewTpl, setShowNewTpl] = useState(false);
   const [filter, setFilter] = useState("all");
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
 
   const allKeys = [
     ...TEMPLATE_KEYS,
@@ -54,7 +55,23 @@ export function MessagesTab({ templates, customTemplates, onChangeTemplate, onAd
 
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center", gap: 14, margin: "12px 20px 8px" }}>
+      {/* ── Top banner: filter + add-template icons ── */}
+      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", padding: "14px 20px 0", gap: 8 }}>
+        <button onClick={() => setShowFilterMenu((v) => !v)} title="סינון"
+          style={{ width: 34, height: 34, borderRadius: "50%",
+            background: showFilterMenu ? "#6a7870" : C.cream, color: showFilterMenu ? "#f0ede6" : C.ink,
+            border: `1px solid ${showFilterMenu ? "#6a7870" : C.hair}`, cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Filter size={16} strokeWidth={STROKE} />
+        </button>
+        <button onClick={() => setShowNewTpl(true)} title="הוספת תבנית חדשה"
+          style={{ width: 34, height: 34, borderRadius: "50%", background: "#6a7870", color: "#f0ede6",
+            border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Plus size={17} strokeWidth={STROKE} />
+        </button>
+      </div>
+
+      <div style={{ display: "flex", alignItems: "center", gap: 14, margin: "6px 20px 8px" }}>
         <img src={GLOBE2} alt="" style={{ width: 160, height: 160, objectFit: "contain", pointerEvents: "none", flexShrink: 0 }} />
         <div style={{ textAlign: "right", flex: 1 }}>
           <div style={{ fontSize: 30, fontWeight: 400, lineHeight: 1.15 }}>הודעות</div>
@@ -66,22 +83,19 @@ export function MessagesTab({ templates, customTemplates, onChangeTemplate, onAd
         ערכי את התבנית ולחצי + להוספת פרטים אוטומטיים. לחיצה על אייקון וואטסאפ ליד שיעור תפתח חלון בחירת תבנית.
       </div>
 
-      {/* ── Filter bar ── */}
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", margin: "0 20px 16px", alignItems: "center" }}>
-        <button onClick={() => setFilter("all")} className={"tf-pill" + (filter === "all" ? " on" : "")}>
-          הכל
-        </button>
-        {allKeys.map(({ key, label }) => (
-          <button key={key} onClick={() => setFilter(key)} className={"tf-pill" + (filter === key ? " on" : "")}>
-            {label}
+      {/* ── Filter menu (toggled by the filter icon) ── */}
+      {showFilterMenu && (
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", margin: "0 20px 16px", alignItems: "center" }}>
+          <button onClick={() => setFilter("all")} className={"tf-pill" + (filter === "all" ? " on" : "")}>
+            הכל
           </button>
-        ))}
-        <button onClick={() => setShowNewTpl(true)} title="הוסף תבנית חדשה"
-          style={{ width: 30, height: 30, borderRadius: "50%", background: "#6a7870", color: "#f0ede6",
-            border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-          <Plus size={16} strokeWidth={STROKE} />
-        </button>
-      </div>
+          {allKeys.map(({ key, label }) => (
+            <button key={key} onClick={() => setFilter(key)} className={"tf-pill" + (filter === key ? " on" : "")}>
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {visibleKeys.map(({ key, label, desc }) => (
         <SectionCard key={key} style={{ margin: "0 20px 14px", padding: "14px 16px" }}>

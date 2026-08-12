@@ -8,6 +8,8 @@ import { DIARY } from "../assets/images";
 const navBtn = { background: "none", border: `1px solid ${C.hair}`, borderRadius: 10, width: 32, height: 32,
   display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: C.ink };
 
+const DATE_COLORS = ["#BD8573", "#DEA04D", "#4F7165", "#526A7A", "#8A7680", "#829171"];
+
 function LessonRow({ lesson, student, onOpen, onWA, onEdit, onSummary, onToggle, allLessons }) {
   const paid = lesson.status === "paid";
   const hasSummary = allLessons
@@ -103,16 +105,18 @@ export function LessonsScreen({ lessons, students, anchor, setAnchor, view, setV
         </button>
       </div>
 
-      {/* Hero: globe LEFT, title+count RIGHT */}
+      {/* Hero: globe LEFT, title+count RIGHT (text absolutely positioned so it's independent of the image) */}
       {(() => {
         const upcoming = lessons.filter(l => l.date >= todayISO).length;
         return (
-          <div style={{ display: "flex", alignItems: "flex-end", gap: 10, margin: "0 20px 0" }}>
-            <div style={{ textAlign: "right", flex: 1, paddingBottom: 8, marginTop: -68 }}>
-              <div style={{ fontSize: 30, fontWeight: 400, lineHeight: 1.15, marginTop: 6 }}>שיעורים מתוכננים</div>
+          <div style={{ position: "relative", margin: "0 20px 0" }}>
+            <div style={{ position: "absolute", right: 0, top: -6, textAlign: "right", zIndex: 2 }}>
+              <div style={{ fontSize: 30, fontWeight: 400, lineHeight: 1.15 }}>שיעורים מתוכננים</div>
               <div style={{ fontSize: 14, fontWeight: 300, color: C.sub, marginTop: 4 }}>{upcoming} שיעורים קרובים</div>
             </div>
-            <img src={DIARY} alt="" style={{ width: 230, marginTop: 30, pointerEvents: "none", flexShrink: 0 }} />
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <img src={DIARY} alt="" style={{ width: 230, marginTop: 30, pointerEvents: "none", flexShrink: 0 }} />
+            </div>
           </div>
         );
       })()}
@@ -167,7 +171,7 @@ export function LessonsScreen({ lessons, students, anchor, setAnchor, view, setV
                   style={{ border: "none", cursor: "pointer", fontFamily: "inherit", width: 58, flexShrink: 0,
                     display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 3,
                     padding: "10px 4px",
-                    background: isToday ? C.green : (ls.length > 0 ? dotFor(ls[0].subject) : "#f0ead8"),
+                    background: isToday ? C.green : (ls.length > 0 ? DATE_COLORS[i % DATE_COLORS.length] : "#f0ead8"),
                     color: (isToday || ls.length > 0) ? "#fff" : C.ink }}>
                     <span style={{ fontSize: 11.5, fontWeight: 400, opacity: .9 }}>{HE_DAYS[i]}</span>
                     <span style={{ fontSize: 17, fontWeight: isToday ? 600 : 500 }}>{Number(d.slice(8, 10))}</span>
