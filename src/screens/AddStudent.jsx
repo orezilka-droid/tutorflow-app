@@ -6,13 +6,33 @@ import { Sheet } from "../components/Small";
    Note: the `location` field was removed — the live `students` table has
    no `location` column, so it's dropped from the form entirely (grid
    reflows naturally with 5 fields instead of 6). */
+const contactsSupported = typeof navigator !== "undefined" && navigator.contacts && navigator.contacts.select;
+
 export function AddStudent({ onClose, onSubmit }) {
   const [f, setF] = useState({ name: "", phone: "", grade: "", subject: "", hourlyRate: "", notes: "" });
   const set = (k, v) => setF((p) => ({ ...p, [k]: v }));
   const phoneOk = /^0[5-9]\d{8}$/.test(f.phone.replace(/[-\s]/g, ""));
   const valid = f.name.trim() && phoneOk && f.subject.trim() && Number(f.hourlyRate) > 0;
+
+  const pickContact = async () => {
+    try {
+      const [contact] = await navigator.contacts.select(["name", "tel"], { multiple: false });
+      if (!contact) return;
+      const name = contact.name?.[0] || "";
+      const phone = (contact.tel?.[0] || "").replace(/[^\d+]/g, "").replace(/^\+972/, "0");
+      setF((p) => ({ ...p, name: name || p.name, phone: phone || p.phone }));
+    } catch (e) {
+      // user cancelled the picker, or it's unsupported — nothing to do
+    }
+  };
+
   return (
     <Sheet title="תלמיד/ה חדש/ה" onClose={onClose}>
+      {contactsSupported && (
+        <button onClick={pickContact} className="tf-ghost" style={{ width: "100%", marginBottom: 12 }}>
+          בחירה מאנשי קשר
+        </button>
+      )}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
         <div>
           <label className="tf-label">שם מלא *</label>

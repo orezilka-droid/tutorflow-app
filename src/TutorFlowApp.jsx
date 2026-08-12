@@ -6,11 +6,13 @@ import {
 import { C, STROKE } from "./lib/theme";
 import { todayISO, today, iso, heDateShort } from "./lib/dates";
 import { openWhatsApp, fillTemplate, defaultSettings } from "./lib/utils";
+import { googleCalendarUrl, downloadICS } from "./lib/calendar";
 import { Sheet, Badge } from "./components/Small";
 import {
   fetchAllData, dbInsertStudent, dbUpdateStudent, dbClearStudents,
   dbInsertLesson, dbUpdateLesson, dbDeleteLesson, dbClearLessons,
   dbUpdateTemplateBody, dbInsertTemplateRow, dbSaveSettings,
+  dbUploadLessonAttachment,
 } from "./lib/db";
 
 import { HomeTab } from "./screens/HomeTab";
@@ -224,6 +226,7 @@ export function TutorFlowApp({ user, onLogout }) {
   };
 
   const [templatePicker, setTemplatePicker] = useState(null); // lesson for template picker
+  const [calendarPromptLesson, setCalendarPromptLesson] = useState(null); // just-added lesson, for "add to calendar" prompt
 
   const sendLessonWA = (lesson) => setTemplatePicker(lesson);
 
@@ -281,6 +284,7 @@ export function TutorFlowApp({ user, onLogout }) {
       setShowAdd(false);
       setConflictLesson(null); setPendingLesson(null);
       notify("השיעור נוסף ליומן");
+      setCalendarPromptLesson(created);
       if (sendConfirm)
         openWhatsApp(s.phone, fillTemplate(templates.confirmation, { studentName: s.name, date: form.date, time: form.time, price: form.price }));
     } catch (e) {
@@ -472,7 +476,8 @@ export function TutorFlowApp({ user, onLogout }) {
             onToggle={() => requestToggle(selectedLesson.id)}
             onWA={() => sendLessonWA(selectedLesson)}
             onEdit={() => { setSelectedLessonId(null); setTimeout(() => setEditLessonId(selectedLesson.id), 60); }}
-            onSaveSummary={(notes) => updateLesson(selectedLesson.id, { notes })}
+            onSaveSummary={(patch) => updateLesson(selectedLesson.id, patch)}
+            onUploadAttachment={(file) => dbUploadLessonAttachment(user.id, selectedLesson.id, file)}
             onDelete={() => setConfirmDelete(selectedLesson.id)}
             onShowUnpaid={(sid) => { setSelectedLessonId(null); setUnpaidFilter(sid); setTimeout(() => setShowUnpaid(true), 80); }}
           />
@@ -749,6 +754,36 @@ export function TutorFlowApp({ user, onLogout }) {
             </div>
           );
         })()}
+
+        {/* ============ ADD TO CALENDAR PROMPT ============ */}
+        {calendarPromptLesson && (
+          <div style={{ position: "fixed", inset: 0, zIndex: 55, display: "flex", alignItems: "flex-end", justifyContent: "center" }} dir="rtl">
+            <div onClick={() => setCalendarPromptLesson(null)} style={{ position: "absolute", inset: 0, background: "rgba(38,37,31,.38)" }} />
+            <div style={{ position: "relative", width: "100%", maxWidth: 430, background: C.card, borderRadius: "22px 22px 0 0", padding: "20px 20px 36px",
+              boxShadow: "0 -8px 30px rgba(38,37,31,.15)", fontFamily: "'Assistant',sans-serif" }}>
+              <div style={{ fontSize: 16, fontWeight: 400, marginBottom: 4 }}>להוסיף ליומן?</div>
+              <div style={{ fontSize: 12.5, fontWeight: 300, color: C.sub, marginBottom: 16 }}>
+                {calendarPromptLesson.studentName} · {heDateShort(calendarPromptLesson.date)} · {calendarPromptLesson.time}
+              </div>
+              <a href={googleCalendarUrl(calendarPromptLesson)} target="_blank" rel="noopener noreferrer"
+                onClick={() => setCalendarPromptLesson(null)}
+                style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none",
+                  background: C.cream, border: `1px solid ${C.hair}`, borderRadius: 14,
+                  padding: "12px 16px", marginBottom: 10, fontFamily: "inherit", textAlign: "right" }}>
+                <span style={{ fontSize: 22 }}>📅</span>
+                <div style={{ fontSize: 14, fontWeight: 500, color: C.ink }}>הוספה ל-Google Calendar</div>
+              </a>
+              <button onClick={() => { downloadICS(calendarPromptLesson); setCalendarPromptLesson(null); }}
+                style={{ width: "100%", display: "flex", alignItems: "center", gap: 12,
+                  background: C.cream, border: `1px solid ${C.hair}`, borderRadius: 14,
+                  padding: "12px 16px", marginBottom: 10, cursor: "pointer", fontFamily: "inherit", textAlign: "right" }}>
+                <span style={{ fontSize: 22 }}>🗓️</span>
+                <div style={{ fontSize: 14, fontWeight: 500, color: C.ink }}>הורדת קובץ ליומן (Outlook)</div>
+              </button>
+              <button onClick={() => setCalendarPromptLesson(null)} className="tf-ghost" style={{ width: "100%", marginTop: 4 }}>לא עכשיו</button>
+            </div>
+          </div>
+        )}
 
         {/* ============ SETTINGS DRAWER ============ */}
         {showSettings && (

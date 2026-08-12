@@ -52,6 +52,7 @@ const lessonFromRow = (r) => ({
   status: r.status,
   subject: r.subject,
   notes: r.notes,
+  attachmentUrl: r.attachment_url || null,
   paidAt: r.status === "paid" ? r.date : null, // derived locally; no paid_at column exists
 });
 
@@ -66,6 +67,7 @@ const lessonToRow = (l, userId) => ({
   status: l.status,
   subject: l.subject,
   notes: l.notes,
+  attachment_url: l.attachmentUrl ?? null,
 });
 
 /* ================= Settings ================= */
@@ -191,6 +193,7 @@ export async function dbUpdateLesson(userId, id, patch) {
   if ("status" in patch) row.status = patch.status;
   if ("subject" in patch) row.subject = patch.subject;
   if ("notes" in patch) row.notes = patch.notes;
+  if ("attachmentUrl" in patch) row.attachment_url = patch.attachmentUrl;
   // paidAt has no DB column — intentionally not persisted.
   const { error } = await supabase.from("lessons").update(row).eq("id", id).eq("user_id", userId);
   if (error) throw error;
@@ -221,4 +224,16 @@ export async function dbInsertTemplateRow(userId, key, label, body = "") {
     .single();
   if (error) throw error;
   return data;
+}
+
+/* ================= Lesson summary attachments (Storage) ================= */
+const ATTACHMENTS_BUCKET = "lesson-attachments";
+
+export async function dbUploadLessonAttachment(userId, lessonId, file) {
+  const ext = file.name.split(".").pop();
+  const path = `${userId}/${lessonId}-${Date.now()}.${ext}`;
+  const { error } = await supabase.storage.from(ATTACHMENTS_BUCKET).upload(path, file, { upsert: true });
+  if (error) throw error;
+  const { data } = supabase.storage.from(ATTACHMENTS_BUCKET).getPublicUrl(path);
+  return data.publicUrl;
 }

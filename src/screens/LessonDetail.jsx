@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowRight, Trash2, Pencil, Calendar, MapPin, FileText, Phone } from "lucide-react";
+import { ArrowRight, Trash2, Pencil, Calendar, MapPin, FileText, Phone, Paperclip, Link2 } from "lucide-react";
 import { C, STROKE } from "../lib/theme";
 import { Badge } from "../components/Small";
 import { heDateShort, endTime } from "../lib/dates";
@@ -9,18 +9,35 @@ import { LESSON_BG_B64 } from "../assets/images";
    Note: student.location has no DB column, so the "מיקום" row always
    falls back to the default "אונליין (זום)" text — same fallback the
    original source already used when location was unset. */
-export function LessonDetail({ lesson, student, allLessons, onClose, onToggle, onWA, onShowUnpaid, onEdit, onSaveSummary, onDelete }) {
+export function LessonDetail({ lesson, student, allLessons, onClose, onToggle, onWA, onShowUnpaid, onEdit, onSaveSummary, onUploadAttachment, onDelete }) {
   const prev = allLessons
     .filter((l) => l.studentId === lesson.studentId && l.id !== lesson.id && l.date <= lesson.date)
     .sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4);
   const paid = lesson.status === "paid";
   const [showSummary, setShowSummary] = useState(false);
   const [summaryText, setSummaryText] = useState("");
+  const [attachmentUrl, setAttachmentUrl] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   const handleSaveSummary = () => {
-    onSaveSummary && onSaveSummary(summaryText.trim());
+    onSaveSummary && onSaveSummary({ notes: summaryText.trim(), attachmentUrl: attachmentUrl.trim() || null });
     setShowSummary(false);
     setSummaryText("");
+    setAttachmentUrl("");
+  };
+
+  const handleFilePick = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !onUploadAttachment) return;
+    setUploading(true);
+    try {
+      const url = await onUploadAttachment(file);
+      setAttachmentUrl(url);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -91,7 +108,7 @@ export function LessonDetail({ lesson, student, allLessons, onClose, onToggle, o
             <Phone size={20} strokeWidth={STROKE} />
             שליחת וואטסאפ
           </button>
-          <button onClick={() => { setSummaryText(lesson.notes || ""); setShowSummary(true); }}
+          <button onClick={() => { setSummaryText(lesson.notes || ""); setAttachmentUrl(lesson.attachmentUrl || ""); setShowSummary(true); }}
             style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
               background: C.card, color: C.ink, border: `1px solid ${C.hair}`, borderRadius: 16, padding: "12px 14px",
               cursor: "pointer", fontFamily: "inherit", fontSize: 14, fontWeight: 400 }}>
@@ -117,6 +134,23 @@ export function LessonDetail({ lesson, student, allLessons, onClose, onToggle, o
                 onChange={(e) => setSummaryText(e.target.value)}
                 placeholder="מה עברנו היום? איפה הייתה התקדמות? מה לחזור בפעם הבאה?"
               />
+
+              <label className="tf-label" style={{ marginTop: 12, display: "block" }}>קובץ או קישור לסיכום (אופציונלי)</label>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ flex: 1, position: "relative" }}>
+                  <Link2 size={15} strokeWidth={STROKE} style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", color: C.sub }} />
+                  <input className="tf-input" dir="ltr" value={attachmentUrl}
+                    onChange={(e) => setAttachmentUrl(e.target.value)}
+                    placeholder="https://..." style={{ paddingRight: 32, fontSize: 13 }} />
+                </div>
+                <label style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 40, height: 40,
+                  borderRadius: 10, border: `1px solid ${C.hair}`, background: C.cream, cursor: "pointer", flexShrink: 0 }}>
+                  <Paperclip size={17} strokeWidth={STROKE} style={{ color: C.sub }} />
+                  <input type="file" onChange={handleFilePick} style={{ display: "none" }} />
+                </label>
+              </div>
+              {uploading && <div style={{ fontSize: 12, color: C.sub, marginTop: 4 }}>מעלה קובץ…</div>}
+
               <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
                 <button onClick={() => setShowSummary(false)} className="tf-ghost" style={{ flex: 1, padding: "9px" }}>ביטול</button>
                 <button onClick={handleSaveSummary}
@@ -154,6 +188,13 @@ export function LessonDetail({ lesson, student, allLessons, onClose, onToggle, o
               <div style={{ background: "#f7f3ea", borderRadius: 12, padding: "10px 13px", fontSize: 13.5, fontWeight: 300, color: "#4a463a", lineHeight: 1.6 }}>
                 {last.notes}
               </div>
+              {last.attachmentUrl && (
+                <a href={last.attachmentUrl} target="_blank" rel="noopener noreferrer"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 8, fontSize: 13, color: C.green, textDecoration: "none" }}>
+                  <Paperclip size={14} strokeWidth={STROKE} />
+                  קובץ מצורף
+                </a>
+              )}
               {/* All previous summaries */}
               {withNotes.slice(1).length > 0 && (
                 <div style={{ marginTop: 12 }}>
