@@ -64,8 +64,7 @@ export function HomeTab({
       </div>
 
       {allDoneToday ? (
-        <div style={{ margin: "16px 20px 8px", borderRadius: 18, overflow: "hidden", position: "relative",
-          boxShadow: "0 4px 12px rgba(52,64,50,.10)" }}>
+        <div style={{ margin: "16px 20px 8px", position: "relative" }}>
           <img src={DONE_TODAY_IMG} alt="" style={{ width: "100%", height: "auto", display: "block", pointerEvents: "none" }} />
           <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column",
             alignItems: "center", justifyContent: "center", textAlign: "center", padding: "0 20px" }}>
