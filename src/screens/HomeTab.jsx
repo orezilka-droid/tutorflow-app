@@ -176,7 +176,7 @@ export function HomeTab({
                   {/* Lamp alone on the right; title + today/total rows stacked in one right-aligned column to its left */}
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <img src={IDEA_IMG} alt="" style={{ width: 40, height: "auto", pointerEvents: "none", flexShrink: 0, alignSelf: "flex-start" }} />
-                    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-end", textAlign: "right" }}>
+                    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-start", textAlign: "right" }}>
                       <span style={{ fontSize: 17, fontWeight: 600, color: C.ink }}>ממתינים לתשלום</span>
                       <span style={{ fontSize: 11.5, fontWeight: 300, color: C.sub, marginTop: 1, marginBottom: 6 }}>↗ לחץ לפירוט</span>
 
