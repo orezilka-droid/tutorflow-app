@@ -3,7 +3,7 @@ import { C } from "../lib/theme";
 import { Ic, Badge, SectionCard } from "../components/Small";
 import { dotFor } from "../lib/utils";
 import { endTime, greeting, isNight, isSunset, iso } from "../lib/dates";
-import { SCENE_IMG, BOARD_IMG, SUNSET_IMG, NIGHT_IMG, DONE_TODAY_IMG } from "../assets/images";
+import { SCENE_IMG, BOARD_IMG, SUNSET_IMG, NIGHT_IMG, DONE_TODAY_IMG, IDEA_IMG } from "../assets/images";
 
 function ProgressBar({ percent, color }) {
   const clamped = Math.max(0, Math.min(100, percent));
@@ -174,15 +174,18 @@ export function HomeTab({
                     borderRadius: 18, boxShadow: "0 2px 8px rgba(80,65,40,.07)",
                     padding: "14px 18px", cursor: "pointer" }}>
                   {/* Header row */}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                    <span style={{ fontSize: 17, fontWeight: 600, color: C.ink }}>ממתינים לתשלום</span>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <img src={IDEA_IMG} alt="" style={{ width: 26, height: "auto", pointerEvents: "none", flexShrink: 0 }} />
+                      <span style={{ fontSize: 17, fontWeight: 600, color: C.ink }}>ממתינים לתשלום</span>
+                    </div>
                     <span style={{ fontSize: 12, fontWeight: 300, color: C.sub,
                       background: "#f4f0e6", borderRadius: 99, padding: "2px 10px" }}>↗ לחץ לפירוט</span>
                   </div>
                   {/* Today row */}
                   {todayUnpaid.length > 0 && (
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
-                      padding: "8px 0", borderBottom: "1px solid #ede6d6" }}>
+                      padding: "4px 0", borderBottom: "1px solid #ede6d6" }}>
                       <div style={{ fontSize: 15, fontWeight: 500, color: "#c04040", textAlign: "right" }}>
                         היום
                         <span style={{ fontSize: 13, fontWeight: 400, color: "#c04040", marginRight: 6 }}> · {todayUnpaid.length} שיעורים</span>
@@ -193,7 +196,7 @@ export function HomeTab({
                     </div>
                   )}
                   {/* Total row */}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 8 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 4 }}>
                     <div style={{ fontSize: 15, fontWeight: 500, color: "#c04040", textAlign: "right" }}>
                       {"סה״כ"}
                       <span style={{ fontSize: 13, fontWeight: 400, color: "#c04040", marginRight: 6 }}> · {unpaidCount} שיעורים</span>

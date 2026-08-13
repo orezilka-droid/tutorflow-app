@@ -15,6 +15,7 @@ import SUNSET_IMG from "./SUNSET_IMG.webp";
 import NIGHT_IMG from "./NIGHT_IMG.webp";
 import LESSON_BG_B64 from "./LESSON_BG_B64.webp";
 import DONE_TODAY_IMG from "./DONE_TODAY_IMG.webp";
+import IDEA_IMG from "./IDEA_IMG.webp";
 
 // APPLE_IMG reuses the hourglass image, same as the original source.
 const APPLE_IMG = HOURGLASS;
@@ -38,4 +39,5 @@ export {
   LESSON_BG_B64,
   APPLE_IMG,
   DONE_TODAY_IMG,
+  IDEA_IMG,
 };
