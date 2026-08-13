@@ -185,7 +185,7 @@ export function HomeTab({
                             היום
                             <span style={{ fontSize: 13, fontWeight: 400, color: "#c04040", marginRight: 6 }}> · {todayUnpaid.length} שיעורים</span>
                           </div>
-                          <div style={{ minWidth: 60, flexShrink: 0, fontSize: 16, fontWeight: 700, fontFamily: "'Google Sans Flex',sans-serif",
+                          <div style={{ minWidth: 60, flexShrink: 0, fontSize: 14, fontWeight: 700, fontFamily: "'Google Sans Flex',sans-serif",
                             color: "#c04040", textAlign: "left" }}>
                             ₪{todayUnpaidSum.toLocaleString()}
                           </div>
@@ -196,7 +196,7 @@ export function HomeTab({
                           {"סה״כ"}
                           <span style={{ fontSize: 13, fontWeight: 400, color: "#c04040", marginRight: 6 }}> · {unpaidCount} שיעורים</span>
                         </div>
-                        <div style={{ minWidth: 60, flexShrink: 0, fontSize: 18, fontWeight: 700, fontFamily: "'Google Sans Flex',sans-serif",
+                        <div style={{ minWidth: 60, flexShrink: 0, fontSize: 15, fontWeight: 700, fontFamily: "'Google Sans Flex',sans-serif",
                           color: "#c04040", textAlign: "left" }}>
                           ₪{unpaidTotal.toLocaleString()}
                         </div>
