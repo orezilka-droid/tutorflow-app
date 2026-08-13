@@ -181,27 +181,28 @@ export function HomeTab({
                       <span style={{ fontSize: 11.5, fontWeight: 300, color: C.sub, marginTop: 1 }}>↗ לחץ לפירוט</span>
                     </div>
                   </div>
-                  {/* Today row */}
-                  {todayUnpaid.length > 0 && (
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
-                      padding: "2px 0", borderBottom: "1px solid #ede6d6" }}>
-                      <div style={{ fontSize: 15, fontWeight: 500, color: "#c04040", textAlign: "right" }}>
-                        היום
-                        <span style={{ fontSize: 13, fontWeight: 400, color: "#c04040", marginRight: 6 }}> · {todayUnpaid.length} שיעורים</span>
-                      </div>
-                      <div style={{ fontSize: 16, fontWeight: 700, fontFamily: "'Google Sans Flex',sans-serif", color: "#c04040" }}>
-                        ₪{todayUnpaidSum.toLocaleString()}
-                      </div>
+                  {/* Today + Total rows — a real grid so both columns line up exactly */}
+                  <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", rowGap: 2 }}>
+                    {todayUnpaid.length > 0 && (
+                      <>
+                        <div style={{ gridColumn: 1, fontSize: 16, fontWeight: 700, fontFamily: "'Google Sans Flex',sans-serif",
+                          color: "#c04040", alignSelf: "center", paddingBottom: 4, borderBottom: "1px solid #ede6d6" }}>
+                          ₪{todayUnpaidSum.toLocaleString()}
+                        </div>
+                        <div style={{ gridColumn: 2, fontSize: 15, fontWeight: 500, color: "#c04040", textAlign: "right",
+                          alignSelf: "center", paddingBottom: 4, borderBottom: "1px solid #ede6d6" }}>
+                          היום
+                          <span style={{ fontSize: 13, fontWeight: 400, color: "#c04040", marginRight: 6 }}> · {todayUnpaid.length} שיעורים</span>
+                        </div>
+                      </>
+                    )}
+                    <div style={{ gridColumn: 1, fontSize: 18, fontWeight: 700, fontFamily: "'Google Sans Flex',sans-serif",
+                      color: "#c04040", alignSelf: "center" }}>
+                      ₪{unpaidTotal.toLocaleString()}
                     </div>
-                  )}
-                  {/* Total row */}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 2 }}>
-                    <div style={{ fontSize: 15, fontWeight: 500, color: "#c04040", textAlign: "right" }}>
+                    <div style={{ gridColumn: 2, fontSize: 15, fontWeight: 500, color: "#c04040", textAlign: "right", alignSelf: "center" }}>
                       {"סה״כ"}
                       <span style={{ fontSize: 13, fontWeight: 400, color: "#c04040", marginRight: 6 }}> · {unpaidCount} שיעורים</span>
-                    </div>
-                    <div style={{ fontSize: 18, fontWeight: 700, fontFamily: "'Google Sans Flex',sans-serif", color: "#c04040" }}>
-                      ₪{unpaidTotal.toLocaleString()}
                     </div>
                   </div>
                 </div>
