@@ -21,6 +21,7 @@ export function HomeTab({
   const now = new Date();
   const todayDoneList = todaysLessons.filter(l => new Date(l.date + "T" + l.time) <= now);
   const allDoneToday = todaysLessons.length > 0 && todayDoneList.length === todaysLessons.length;
+  const noLessonsScheduledToday = todaysLessons.length === 0;
 
   return (
     <>
@@ -63,15 +64,26 @@ export function HomeTab({
         </div>
       </div>
 
-      {allDoneToday ? (
+      {(allDoneToday || noLessonsScheduledToday) ? (
         <div style={{ margin: "16px 20px 8px", position: "relative" }}>
           <img src={DONE_TODAY_IMG} alt="" style={{ width: "100%", height: "auto", display: "block", pointerEvents: "none" }} />
           <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column",
             alignItems: "center", justifyContent: "center", textAlign: "center", padding: "0 20px" }}>
-            <div style={{ fontSize: 15, fontWeight: 500, color: C.ink }}>אין יותר שיעורים להיום.</div>
-            <div style={{ fontSize: 13, fontWeight: 300, color: C.sub, marginTop: 4, lineHeight: 1.5 }}>
-              כל הכבוד! עבדת קשה ועכשיו זמן לנוח
-            </div>
+            {noLessonsScheduledToday ? (
+              <>
+                <div style={{ fontSize: 15, fontWeight: 500, color: C.ink }}>אין שיעורים להיום.</div>
+                <div style={{ fontSize: 13, fontWeight: 300, color: C.sub, marginTop: 4, lineHeight: 1.5 }}>
+                  זמן לעבוד על השיעורים הבאים!
+                </div>
+              </>
+            ) : (
+              <>
+                <div style={{ fontSize: 15, fontWeight: 500, color: C.ink }}>אין יותר שיעורים להיום.</div>
+                <div style={{ fontSize: 13, fontWeight: 300, color: C.sub, marginTop: 4, lineHeight: 1.5 }}>
+                  כל הכבוד! עבדת קשה ועכשיו זמן לנוח
+                </div>
+              </>
+            )}
           </div>
         </div>
       ) : (
