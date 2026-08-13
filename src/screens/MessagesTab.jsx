@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Plus, Filter, ChevronRight } from "lucide-react";
 import { C, STROKE } from "../lib/theme";
-import { SectionCard } from "../components/Small";
+import { SectionCard, Sheet } from "../components/Small";
 import { GLOBE2 } from "../assets/images";
 import { iso } from "../lib/dates";
+
+const TEMPLATE_DOT_COLORS = ["#BD8573", "#829171", "#DEA04D", "#526A7A", "#8A7680"];
 
 /* ================= Messages tab =================
    templates:        { [key]: body }
@@ -89,21 +91,33 @@ export function MessagesTab({ templates, customTemplates, onChangeTemplate, onAd
         ערכי את התבנית ולחצי + להוספת פרטים אוטומטיים. לחיצה על אייקון וואטסאפ ליד שיעור תפתח חלון בחירת תבנית.
       </div>
 
-      {/* ── Filter menu (toggled by the filter icon) ── */}
+      {/* ── Filter popup (opened by the filter icon) ── */}
       {showFilterMenu && (
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", margin: "0 20px 16px", alignItems: "center" }}>
-          <button onClick={() => setFilter("all")} className={"tf-pill" + (filter === "all" ? " on" : "")}>
-            הכל
-          </button>
-          {allKeys.map(({ key, label }) => (
-            <button key={key} onClick={() => setFilter(key)} className={"tf-pill" + (filter === key ? " on" : "")}>
-              {label}
+        <Sheet title="סינון הודעות" onClose={() => setShowFilterMenu(false)}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <button onClick={() => { setFilter("all"); setShowFilterMenu(false); }}
+              style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%",
+                padding: "12px 14px", borderRadius: 12, border: `1px solid ${filter === "all" ? C.green : C.hair}`,
+                background: filter === "all" ? "#eef4e8" : C.card, cursor: "pointer", fontFamily: "inherit",
+                fontSize: 14.5, color: C.ink, textAlign: "right" }}>
+              הכל
             </button>
-          ))}
-        </div>
+            {allKeys.map(({ key, label }, i) => (
+              <button key={key} onClick={() => { setFilter(key); setShowFilterMenu(false); }}
+                style={{ display: "flex", alignItems: "center", gap: 10, width: "100%",
+                  padding: "12px 14px", borderRadius: 12, border: `1px solid ${filter === key ? C.green : C.hair}`,
+                  background: filter === key ? "#eef4e8" : C.card, cursor: "pointer", fontFamily: "inherit",
+                  fontSize: 14.5, color: C.ink, textAlign: "right" }}>
+                <span style={{ width: 9, height: 9, borderRadius: "50%", flexShrink: 0,
+                  background: TEMPLATE_DOT_COLORS[i % TEMPLATE_DOT_COLORS.length] }} />
+                {label}
+              </button>
+            ))}
+          </div>
+        </Sheet>
       )}
 
-      {visibleKeys.map(({ key, label, desc }) => {
+      {visibleKeys.map(({ key, label, desc }, i) => {
         const isOpen = openIds.has(key);
         return (
           <SectionCard key={key} style={{ margin: "0 20px 14px", padding: 0, overflow: "hidden" }}>
@@ -111,6 +125,8 @@ export function MessagesTab({ templates, customTemplates, onChangeTemplate, onAd
               style={{ width: "100%", display: "flex", alignItems: "center", gap: 10,
                 padding: "14px 16px", background: "none", border: "none", cursor: "pointer",
                 fontFamily: "inherit", textAlign: "right" }}>
+              <span style={{ width: 9, height: 9, borderRadius: "50%", flexShrink: 0,
+                background: TEMPLATE_DOT_COLORS[i % TEMPLATE_DOT_COLORS.length] }} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 15, color: C.ink }}>{label}</div>
                 <div style={{ fontSize: 11.5, fontWeight: 300, color: C.sub, marginTop: 2 }}>{desc}</div>
