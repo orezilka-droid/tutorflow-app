@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Filter } from "lucide-react";
+import { Plus, Filter, ChevronRight } from "lucide-react";
 import { C, STROKE } from "../lib/theme";
 import { SectionCard } from "../components/Small";
 import { GLOBE2 } from "../assets/images";
@@ -29,6 +29,12 @@ export function MessagesTab({ templates, customTemplates, onChangeTemplate, onAd
   const [showNewTpl, setShowNewTpl] = useState(false);
   const [filter, setFilter] = useState("all");
   const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [openIds, setOpenIds] = useState(new Set());
+  const toggleOpen = (key) => setOpenIds((prev) => {
+    const next = new Set(prev);
+    next.has(key) ? next.delete(key) : next.add(key);
+    return next;
+  });
 
   const allKeys = [
     ...TEMPLATE_KEYS,
@@ -97,29 +103,49 @@ export function MessagesTab({ templates, customTemplates, onChangeTemplate, onAd
         </div>
       )}
 
-      {visibleKeys.map(({ key, label, desc }) => (
-        <SectionCard key={key} style={{ margin: "0 20px 14px", padding: "14px 16px" }}>
-          <div style={{ fontSize: 15, marginBottom: 2 }}>{label}</div>
-          <div style={{ fontSize: 11.5, fontWeight: 300, color: C.sub, marginBottom: 10 }}>{desc}</div>
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
-            {VARS.map(({ tag, label: vl }) => (
-              <button key={tag} onClick={() => insertTag(key, tag)}
-                style={{ fontSize: 11.5, padding: "3px 10px", borderRadius: 99,
-                  border: "1px solid " + C.hair, background: C.cream, color: C.green,
-                  cursor: "pointer", fontFamily: "inherit", fontWeight: 400 }}>
-                + {vl}
-              </button>
-            ))}
-          </div>
-          <textarea id={"tpl-" + key} className="tf-input" rows={3} value={templates[key] || ""}
-            onChange={(e) => onChangeTemplate(key, e.target.value)} />
-          <div style={{ marginTop: 10, background: "#f7f3ea", borderRadius: 10, padding: "9px 12px",
-            fontSize: 13, fontWeight: 300, color: "#4a463a", lineHeight: 1.6 }}>
-            <span style={{ fontSize: 11, color: C.sub, display: "block", marginBottom: 3 }}>תצוגה מקדימה:</span>
-            {fillTemplate(templates[key], { studentName: "נועה לוי", date: iso(new Date()), time: "16:00", price: 270 })}
-          </div>
-        </SectionCard>
-      ))}
+      {visibleKeys.map(({ key, label, desc }) => {
+        const isOpen = openIds.has(key);
+        return (
+          <SectionCard key={key} style={{ margin: "0 20px 14px", padding: 0, overflow: "hidden" }}>
+            <button onClick={() => toggleOpen(key)}
+              style={{ width: "100%", display: "flex", alignItems: "center", gap: 10,
+                padding: "14px 16px", background: "none", border: "none", cursor: "pointer",
+                fontFamily: "inherit", textAlign: "right" }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 15, color: C.ink }}>{label}</div>
+                <div style={{ fontSize: 11.5, fontWeight: 300, color: C.sub, marginTop: 2 }}>{desc}</div>
+              </div>
+              <ChevronRight size={16} strokeWidth={STROKE} style={{ color: C.sub, flexShrink: 0,
+                transform: isOpen ? "rotate(-90deg)" : "rotate(90deg)", transition: "transform .2s" }} />
+            </button>
+            {isOpen && (
+              <div style={{ padding: "0 16px 16px" }}>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
+                  {VARS.map(({ tag, label: vl }) => (
+                    <button key={tag} onClick={() => insertTag(key, tag)}
+                      style={{ fontSize: 11.5, padding: "3px 10px", borderRadius: 99,
+                        border: "1px solid " + C.hair, background: C.cream, color: C.green,
+                        cursor: "pointer", fontFamily: "inherit", fontWeight: 400 }}>
+                      + {vl}
+                    </button>
+                  ))}
+                </div>
+                <textarea id={"tpl-" + key} className="tf-input" rows={3} value={templates[key] || ""}
+                  onChange={(e) => onChangeTemplate(key, e.target.value)} />
+                <div style={{ fontSize: 11, color: C.sub, margin: "10px 0 4px" }}>תצוגה מקדימה:</div>
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <div style={{ background: "#E3EAD4", borderRadius: "14px 14px 3px 14px", padding: "9px 13px",
+                    maxWidth: "85%", fontSize: 13, fontWeight: 300, color: "#26251f", lineHeight: 1.7, position: "relative" }}>
+                    {fillTemplate(templates[key], { studentName: "נועה לוי", date: iso(new Date()), time: "16:00", price: 270 })}
+                    <span style={{ position: "absolute", bottom: 0, left: -6, width: 12, height: 12,
+                      background: "#E3EAD4", clipPath: "polygon(100% 0, 0 100%, 100% 100%)" }} />
+                  </div>
+                </div>
+              </div>
+            )}
+          </SectionCard>
+        );
+      })}
       <div style={{ margin: "4px 20px 24px" }}>
         {showNewTpl ? (
           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
