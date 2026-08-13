@@ -110,12 +110,13 @@ export function LessonsScreen({ lessons, students, anchor, setAnchor, view, setV
         const upcoming = lessons.filter(l => l.date >= todayISO).length;
         return (
           <div style={{ position: "relative", margin: "0 20px 0" }}>
-            <div style={{ position: "absolute", right: 0, top: -6, textAlign: "right", zIndex: 2 }}>
-              <div style={{ fontSize: 30, fontWeight: 400, lineHeight: 1.15 }}>שיעורים מתוכננים</div>
+            <div style={{ position: "absolute", right: 0, top: 14, textAlign: "right", zIndex: 2 }}>
+              <div style={{ fontSize: 30, fontWeight: 400, lineHeight: 1.15 }}>שיעורים</div>
+              <div style={{ fontSize: 30, fontWeight: 400, lineHeight: 1.15 }}>מתוכננים</div>
               <div style={{ fontSize: 14, fontWeight: 300, color: C.sub, marginTop: 4 }}>{upcoming} שיעורים קרובים</div>
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <img src={DIARY} alt="" style={{ width: 230, marginTop: 30, pointerEvents: "none", flexShrink: 0 }} />
+              <img src={DIARY} alt="" style={{ width: 190, marginTop: 30, pointerEvents: "none", flexShrink: 0 }} />
             </div>
           </div>
         );
