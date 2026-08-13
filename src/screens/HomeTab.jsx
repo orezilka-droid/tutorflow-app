@@ -3,7 +3,7 @@ import { C } from "../lib/theme";
 import { Ic, Badge, SectionCard } from "../components/Small";
 import { dotFor } from "../lib/utils";
 import { endTime, greeting, isNight, isSunset, iso } from "../lib/dates";
-import { SCENE_IMG, BOARD_IMG, SUNSET_IMG, NIGHT_IMG } from "../assets/images";
+import { SCENE_IMG, BOARD_IMG, SUNSET_IMG, NIGHT_IMG, DONE_TODAY_IMG } from "../assets/images";
 
 function ProgressBar({ percent, color }) {
   const clamped = Math.max(0, Math.min(100, percent));
@@ -18,6 +18,10 @@ export function HomeTab({
   settings, students, lessons, todaysLessons, unpaidByStudent,
   setShowMenu, setShowAdd, setTab, setSelectedLessonId, sendLessonWA, requestToggle, setShowUnpaid,
 }) {
+  const now = new Date();
+  const todayDoneList = todaysLessons.filter(l => new Date(l.date + "T" + l.time) <= now);
+  const allDoneToday = todaysLessons.length > 0 && todayDoneList.length === todaysLessons.length;
+
   return (
     <>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 22px 0" }}>
@@ -59,35 +63,51 @@ export function HomeTab({
         </div>
       </div>
 
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "14px 22px 8px" }}>
-        <div style={{ fontSize: 17, fontWeight: 400 }}>
-          המערכת של היום
+      {allDoneToday ? (
+        <div style={{ margin: "16px 20px 8px", borderRadius: 18, overflow: "hidden", position: "relative",
+          boxShadow: "0 4px 12px rgba(52,64,50,.10)" }}>
+          <img src={DONE_TODAY_IMG} alt="" style={{ width: "100%", height: "auto", display: "block", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column",
+            alignItems: "center", justifyContent: "center", textAlign: "center", padding: "0 20px" }}>
+            <div style={{ fontSize: 15, fontWeight: 500, color: C.ink }}>אין יותר שיעורים להיום.</div>
+            <div style={{ fontSize: 13, fontWeight: 300, color: C.sub, marginTop: 4, lineHeight: 1.5 }}>
+              כל הכבוד! עבדת קשה ועכשיו זמן לנוח
+            </div>
+          </div>
         </div>
-        <button onClick={() => setTab("lessons")} style={{ fontSize: 12.5, fontWeight: 300, color: C.sub, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit" }}>הצג הכל</button>
-      </div>
+      ) : (
+        <>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "14px 22px 8px" }}>
+            <div style={{ fontSize: 17, fontWeight: 400 }}>
+              המערכת של היום
+            </div>
+            <button onClick={() => setTab("lessons")} style={{ fontSize: 12.5, fontWeight: 300, color: C.sub, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit" }}>הצג הכל</button>
+          </div>
 
-      <SectionCard style={{ margin: "0 20px" }}>
-        {todaysLessons.length === 0 ? (
-          <div style={{ padding: "22px 18px", fontSize: 13.5, fontWeight: 300, color: C.sub, textAlign: "center" }}>
-            אין שיעורים היום. אפשר לשבץ שיעור חדש מהאייקון שלמעלה.
-          </div>
-        ) : todaysLessons.map((l, i) => (
-          <div key={l.id} onClick={() => setSelectedLessonId(l.id)}
-            className={i < todaysLessons.length - 1 ? "tf-hair" : ""}
-            style={{ display: "flex", alignItems: "center", gap: 13, padding: "8px 18px", cursor: "pointer" }}>
-            <div style={{ width: 44, flexShrink: 0 }}>
-              <div style={{ fontSize: 14, fontWeight: 500, lineHeight: 1.25 }}>{l.time}</div>
-              <div style={{ fontSize: 12, fontWeight: 300, color: C.sub, lineHeight: 1.25 }}>{endTime(l.time, l.duration)}</div>
-            </div>
-            <span style={{ width: 9, height: 9, borderRadius: "50%", flexShrink: 0, background: dotFor(students.find((s) => s.id === l.studentId)?.subject) }} />
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 14.5, fontWeight: 500, lineHeight: 1.3 }}>{students.find((s) => s.id === l.studentId)?.subject}</div>
-              <div style={{ fontSize: 12, fontWeight: 300, color: C.sub, lineHeight: 1.3 }}>{l.studentName}</div>
-            </div>
-            <Badge status={l.status} onClick={(e) => { e.stopPropagation(); requestToggle(l.id); }} />
-          </div>
-        ))}
-      </SectionCard>
+          <SectionCard style={{ margin: "0 20px" }}>
+            {todaysLessons.length === 0 ? (
+              <div style={{ padding: "22px 18px", fontSize: 13.5, fontWeight: 300, color: C.sub, textAlign: "center" }}>
+                אין שיעורים היום. אפשר לשבץ שיעור חדש מהאייקון שלמעלה.
+              </div>
+            ) : todaysLessons.map((l, i) => (
+              <div key={l.id} onClick={() => setSelectedLessonId(l.id)}
+                className={i < todaysLessons.length - 1 ? "tf-hair" : ""}
+                style={{ display: "flex", alignItems: "center", gap: 13, padding: "8px 18px", cursor: "pointer" }}>
+                <div style={{ width: 44, flexShrink: 0 }}>
+                  <div style={{ fontSize: 14, fontWeight: 500, lineHeight: 1.25 }}>{l.time}</div>
+                  <div style={{ fontSize: 12, fontWeight: 300, color: C.sub, lineHeight: 1.25 }}>{endTime(l.time, l.duration)}</div>
+                </div>
+                <span style={{ width: 9, height: 9, borderRadius: "50%", flexShrink: 0, background: dotFor(students.find((s) => s.id === l.studentId)?.subject) }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 14.5, fontWeight: 500, lineHeight: 1.3 }}>{students.find((s) => s.id === l.studentId)?.subject}</div>
+                  <div style={{ fontSize: 12, fontWeight: 300, color: C.sub, lineHeight: 1.3 }}>{l.studentName}</div>
+                </div>
+                <Badge status={l.status} onClick={(e) => { e.stopPropagation(); requestToggle(l.id); }} />
+              </div>
+            ))}
+          </SectionCard>
+        </>
+      )}
 
       {/* New day-focused KPI cards */}
       {(() => {
@@ -117,16 +137,16 @@ export function HomeTab({
         const kpiCards = [
           { title: "שיעורים היום", value: String(todayDone.length), goal: `מתוך ${todayAll.length}`, pct: pctLessons, color: "#35493e", showBar: true },
           { title: "שעות היום", value: String(todayHours), goal: `מתוך ${todayTotalHours}`, pct: pctHours, color: "#c39089", showBar: true },
-          { title: "הכנסה היום", value: `₪${doneRevenue.toLocaleString()}`, goal: `מתוך ₪${todayRevenue.toLocaleString()}`, pct: pctRevenue, color: "#c9a95c", showBar: false },
+          { title: "הכנסה היום", value: `₪${doneRevenue.toLocaleString()}`, goal: `מתוך ₪${todayRevenue.toLocaleString()}`, pct: pctRevenue, color: "#c9a95c", showBar: true },
         ];
 
         return (
           <div style={{ margin: "16px 20px 8px" }}>
             {/* EOD message — above cards */}
-            {(allDoneToday || noLessonsToday) && (
+            {noLessonsToday && (
               <div style={{ textAlign: "center", fontSize: 15, fontWeight: 300, color: C.sub,
                 margin: "0 0 10px", lineHeight: 1.5 }}>
-                {noLessonsToday ? "😊 איזה כיף! אין שיעורים להיום" : "כל השיעורים להיום הושלמו! זמן לנוח"}
+                😊 איזה כיף! אין שיעורים להיום
               </div>
             )}
 
@@ -134,7 +154,7 @@ export function HomeTab({
             <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
               <div style={{ display: "flex", gap: 7 }}>
                 {kpiCards.map(({ title, value, goal, pct, color, showBar }) => (
-                  <div key={title} style={{ flex: 1, background: `${color}1c`, border: `1px solid ${color}33`, borderRadius: 18,
+                  <div key={title} style={{ flex: 1, background: `${color}33`, border: `1px solid ${color}66`, borderRadius: 18,
                     boxShadow: "0 2px 8px rgba(80,65,40,.07)", overflow: "hidden" }}>
                     <div style={{ padding: "12px 10px", display: "flex", flexDirection: "column", alignItems: "center", gap: 6, minHeight: 88 }}>
                       <div style={{ textAlign: "center", minWidth: 0, flex: 1 }}>
@@ -164,9 +184,9 @@ export function HomeTab({
                   {todayUnpaid.length > 0 && (
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
                       padding: "8px 0", borderBottom: "1px solid #ede6d6" }}>
-                      <div style={{ fontSize: 13, fontWeight: 400, color: C.ink, textAlign: "right" }}>
+                      <div style={{ fontSize: 15, fontWeight: 500, color: "#c04040", textAlign: "right" }}>
                         היום
-                        <span style={{ fontSize: 12, fontWeight: 300, color: C.sub, marginRight: 6 }}> · {todayUnpaid.length} שיעורים</span>
+                        <span style={{ fontSize: 13, fontWeight: 400, color: "#c04040", marginRight: 6 }}> · {todayUnpaid.length} שיעורים</span>
                       </div>
                       <div style={{ fontSize: 16, fontWeight: 700, fontFamily: "'Google Sans Flex',sans-serif", color: "#c04040" }}>
                         ₪{todayUnpaidSum.toLocaleString()}
@@ -175,9 +195,9 @@ export function HomeTab({
                   )}
                   {/* Total row */}
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 8 }}>
-                    <div style={{ fontSize: 13, fontWeight: 400, color: C.sub, textAlign: "right" }}>
+                    <div style={{ fontSize: 15, fontWeight: 500, color: "#c04040", textAlign: "right" }}>
                       {"סה״כ"}
-                      <span style={{ fontSize: 12, fontWeight: 300, color: C.sub, marginRight: 6 }}> · {unpaidCount} שיעורים</span>
+                      <span style={{ fontSize: 13, fontWeight: 400, color: "#c04040", marginRight: 6 }}> · {unpaidCount} שיעורים</span>
                     </div>
                     <div style={{ fontSize: 18, fontWeight: 700, fontFamily: "'Google Sans Flex',sans-serif", color: "#c04040" }}>
                       ₪{unpaidTotal.toLocaleString()}
