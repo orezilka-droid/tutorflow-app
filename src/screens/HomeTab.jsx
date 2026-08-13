@@ -177,8 +177,7 @@ export function HomeTab({
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <img src={IDEA_IMG} alt="" style={{ width: 40, height: "auto", pointerEvents: "none", flexShrink: 0, alignSelf: "flex-start" }} />
                     <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-start", textAlign: "right" }}>
-                      <span style={{ fontSize: 17, fontWeight: 600, color: C.ink }}>ממתינים לתשלום</span>
-                      <span style={{ fontSize: 11.5, fontWeight: 300, color: C.sub, marginTop: 1, marginBottom: 6 }}>↗ לחץ לפירוט</span>
+                      <span style={{ fontSize: 17, fontWeight: 600, color: C.ink, marginBottom: 6 }}>ממתינים לתשלום</span>
 
                       {todayUnpaid.length > 0 && (
                         <div style={{ display: "flex", alignItems: "center", width: "100%", paddingBottom: 4, borderBottom: "1px solid #ede6d6" }}>
